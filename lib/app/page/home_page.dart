@@ -8,119 +8,107 @@ import '../models/anime_model.dart';
 import '../repository/home_repository.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final bloc = HomeBloc(InitialHomeState(), homeRepository: HomeRepository(getAnimeDatasource: GetAnimesDatasource()));
-
-  final mock = [
-    {
-      'date': DateTime.now(),
-      'title': 'Whatever',
-      'description': 'Description',
-      'link':
-          'https://www.intoxianime.com/2022/12/sentai-daishikkaku-anime-do-autor-de-gotoubun-ganha-trailer-e-diretor-responsavel/',
-    }
-  ];
-
-  @override
-    void initState() {
-    
-      super.initState();
-    }
+  final bloc = HomeBloc(
+      repository: HomeRepository(getAnimeDatasource: GetAnimesDatasource()));
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Masterclass 5'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: BlocBuilder<HomeBloc, HomeState>(
-          bloc: bloc,
-          builder: (context, state) {
-            if(state is InitialHomeState){
-              return SizedBox();
-            }
+          padding: const EdgeInsets.all(8.0),
+          child: BlocBuilder<HomeBloc, HomeState>(
+              bloc: bloc,
+              builder: (context, state) {
+                if (state is InitialHomeState) {
+                  return Container(
+                    child: const Text("InitialState"),
+                  );
+                }
 
-            if(state is LoadingHomeState){
-              return CircularProgressIndicator();
-            }
+                if (state is LoadingHomeState) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
 
-            if(state is SuccessHomeState){
-             return _buildSucessState(state.listModel);
-            }
+                if (state is SuccessHomeState) {
+                  return _buildSucessState(state.listModel);
+                }
 
-            return SizedBox();
-          }
-        )
-      ),
+                if (state is ErrorHomeState) {
+                  return Container(
+                    child: Text("ErrorState ${state.message}"),
+                  );
+                }
+
+                return const SizedBox();
+              })),
     );
   }
 }
 
-Widget _buildSucessState(List<AnimeModel> animes){
-
-return ListView.builder(
-          itemCount: animes.length,
-          itemBuilder: (context, index) {
-           
-
-            return Card(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 12,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            animes[index].title,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          '${animes[index].date.day}/${animes[index].date.month}/${animes[index].date.year}',
-                          style: Theme.of(context).textTheme.caption,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      animes[index].description,
+Widget _buildSucessState(List<AnimeModel> animes) {
+  return ListView.builder(
+    itemCount: animes.length,
+    itemBuilder: (context, index) {
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 12,
+            horizontal: 12,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      animes[index].title,
                       overflow: TextOverflow.ellipsis,
-                      maxLines: 3,
-                    ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: TextButton(
-                        onPressed: () => launchUrlString(animes[index].link),
-                        child: const Text(
-                          'Acessar matéria',
-                        ),
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 18,
                       ),
                     ),
-                  ],
+                  ),
+                  Text(
+                    '${animes[index].date.day}/${animes[index].date.month}/${animes[index].date.year}',
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                animes[index].description,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: TextButton(
+                  onPressed: () => launchUrlString(animes[index].link),
+                  child: const Text(
+                    'Acessar matéria',
+                  ),
                 ),
               ),
-            );
-          },
-        );
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }
 
 /* ListView.builder(

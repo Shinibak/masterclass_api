@@ -1,6 +1,8 @@
 import 'package:masterclass_api/app/models/anime_model.dart';
 
-abstract class HomeState {}
+abstract class HomeState {
+  const HomeState();
+}
 
 class InitialHomeState extends HomeState {}
 
@@ -12,4 +14,7 @@ class SuccessHomeState extends HomeState {
   SuccessHomeState(this.listModel);
 }
 
-class ErrorHomeState extends HomeState {}
+class ErrorHomeState extends HomeState {
+  final String message;
+  const ErrorHomeState(this.message);
+}

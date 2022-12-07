@@ -11,11 +11,11 @@ class AnimeModel {
     required this.link,
   });
 
-  factory AnimeModel.fromMap(Map<String, dynamic> map) {
+  factory AnimeModel.fromMap(Map<dynamic, dynamic> map) {
     return AnimeModel(
         date: DateTime.parse(map['date']),
-        title: map['og_title'],
-        description: map['og_description'],
+        title: map['yoast_head_json']['og_title'] ,
+        description: map['yoast_head_json']['og_description'],
         link: map['link']);
   }
 }

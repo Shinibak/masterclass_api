@@ -13,6 +13,7 @@ class GetAnimesDatasource implements IGetAnimesDatasource {
 
   @override
   Future call() async {
-    return await dio.get(AppConsts.baseUrl);
+    var response = await dio.get(AppConsts.baseUrl);
+    return response;
   }
 }

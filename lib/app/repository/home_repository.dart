@@ -8,17 +8,22 @@ abstract class IHomeRepository {
 }
 
 class HomeRepository implements IHomeRepository {
-    final IGetAnimesDatasource getAnimeDatasource;
+  final IGetAnimesDatasource getAnimeDatasource;
 
-    const HomeRepository({required this.getAnimeDatasource,});
+  const HomeRepository({
+    required this.getAnimeDatasource,
+  });
 
   @override
-  Future<List<AnimeModel>> getAnimes() async{
-    
+  Future<List<AnimeModel>> getAnimes() async {
     late List<AnimeModel> animes;
 
     var response = await getAnimeDatasource();
-    animes = json.decode(response.data).map((v) => AnimeModel.fromMap(v));
+
+    List decodedJson = response.data;
+
+    animes = decodedJson.map<AnimeModel>((v) => AnimeModel.fromMap(v)).toList();
+    
     return animes;
   }
 }

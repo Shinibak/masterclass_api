@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:masterclass_api/app/bloc/home_events.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_state.dart';
@@ -17,6 +18,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final bloc = HomeBloc(
       repository: HomeRepository(getAnimeDatasource: GetAnimesDatasource()));
+
+  @override
+  void initState() {
+    super.initState();
+    bloc.add(GetDataHomeEvents());
+  }
 
   @override
   Widget build(BuildContext context) {
